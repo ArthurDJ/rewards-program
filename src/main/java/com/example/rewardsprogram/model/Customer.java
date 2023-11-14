@@ -25,6 +25,7 @@ public class Customer {
 
     @NotBlank(message = "First name is mandatory")
     private String lastName;
+
     @Email
     private String email;
 
@@ -37,6 +38,7 @@ public class Customer {
     @JsonFormat(pattern = "yyyy-MM-dd")
 //    Ensures the date is  in the past.
     private Date dateOfBirth;
+
     private String phone;
 
 }
