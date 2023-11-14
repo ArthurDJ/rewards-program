@@ -1,6 +1,7 @@
 package com.example.rewardsprogram.model;
 
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -27,7 +28,7 @@ public class Transaction {
 
     @NotNull(message = "Require transaction Date.")
     @PastOrPresent(message = "Transaction date must be in the past or present.")
-
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private Date transactionDate;
 
     @NotNull
