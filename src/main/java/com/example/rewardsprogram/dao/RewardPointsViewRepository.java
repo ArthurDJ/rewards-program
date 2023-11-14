@@ -9,14 +9,15 @@ import org.springframework.stereotype.Repository;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface RewardPointsViewRepository extends JpaRepository<RewardPointsViewEntity, Long> {
     List<RewardPointsViewEntity> findAllByCustomerId(Long customerId);
 
-    List<RewardPointsViewEntity> findAllByTransactionId(Long transactionId);
+    Optional<RewardPointsViewEntity> findByTransactionId(Long transactionId);
 
-    List<RewardPointsViewEntity> findByTransactionDate(Date tran);
+    List<RewardPointsViewEntity> findByTransactionDate(Date transactionDate);
 
     // Find rewardPointsView within a date range
     List<RewardPointsViewEntity> findALLByTransactionDateBetween(Date startDate, Date endDate);
@@ -30,8 +31,11 @@ public interface RewardPointsViewRepository extends JpaRepository<RewardPointsVi
     // Find rewardPointsView after a specific date
     List<RewardPointsViewEntity> findAllByTransactionDateAfter(Date afterDate);
 
-    // Find total over a specific  mount
-    List<RewardPointsViewEntity> findAllByPointsAfter(Integer points);
+    // Find total great or equal a specific  mount
+    List<RewardPointsViewEntity> findAllByPointsGreaterThanEqual(Integer points);
+
+    // Find total less or equal a specific  mount
+    List<RewardPointsViewEntity> findAllByPointsLessThanEqual(Integer points);
 
 
 }

@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 
 @Repository
@@ -15,7 +16,7 @@ public interface TransactionRepository extends JpaRepository<TransactionEntity, 
     List<TransactionEntity> findAllByCustomerID(Long customerID);
 
     // Find transactions by  transaction ID
-    TransactionEntity findByTransactionId(Long transactionID);
+    Optional<TransactionEntity> findByTransactionId(Long transactionID);
 
     // Find transactions within a date range
     List<TransactionEntity> findALLByTransactionDateBetween(Date startDate, Date endDate);

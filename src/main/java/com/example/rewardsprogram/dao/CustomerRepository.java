@@ -6,6 +6,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 
 @Repository
@@ -22,7 +23,7 @@ public interface CustomerRepository extends JpaRepository<CustomerEntity, Long> 
 
 
     // Find customer by customer ID
-    CustomerEntity findAllByCustomerId(Long customerID);
+    Optional<CustomerEntity> findAllByCustomerId(Long customerID);
 
     // Find customers by first name
     List<CustomerEntity> findAllByFirstName(String firstName);
@@ -31,7 +32,7 @@ public interface CustomerRepository extends JpaRepository<CustomerEntity, Long> 
     List<CustomerEntity> findAllByLastName(String lastName);
 
     // Find a customer by email
-    CustomerEntity findByEmail(String email);
+    Optional<CustomerEntity> findByEmail(String email);
 
     // Find customers by a pattern in their first name (e.g., all customers whose first name starts with 'Jo')
     List<CustomerEntity> findAllByFirstNameStartingWith(String prefix);
