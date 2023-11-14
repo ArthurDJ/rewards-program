@@ -22,7 +22,7 @@ public interface CustomerRepository extends JpaRepository<Customer, Long> {
     Customer findByEmail(String email);
 
     // Find customers by a pattern in their first name (e.g., all customers whose first name starts with 'Jo')
-    List<Customer> findByFirstNameStartingWith(String prefix);
+    List<Customer> findAllByFirstNameStartingWith(String prefix);
 
 
     // Find customers by birthdate
