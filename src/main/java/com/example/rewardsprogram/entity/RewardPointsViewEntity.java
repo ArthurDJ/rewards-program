@@ -15,7 +15,7 @@ import java.util.Date;
 @Table(name = "RewardPointsView", uniqueConstraints = {
         @UniqueConstraint(columnNames = "TransactionID")
 })
-public class RewardPointsView {
+public class RewardPointsViewEntity {
 
 
     @Id

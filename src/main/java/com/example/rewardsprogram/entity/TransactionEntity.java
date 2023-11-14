@@ -20,7 +20,7 @@ import java.util.Date;
 @Table(name = "Transactions", uniqueConstraints = {
         @UniqueConstraint(columnNames = "TransactionID")
 })
-public class Transaction {
+public class TransactionEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "TransactionID")
@@ -31,7 +31,7 @@ public class Transaction {
 //   it should not be fetched from the database until it's explicitly accessed in the code.
     @JoinColumn(name = "CustomerID", nullable = false)
     // This annotation establishes a foreign key relationship to the Customer entity
-    private Customer customer;
+    private CustomerEntity customerEntity;
 
 
     @Column(name = "TransactionDate", nullable = false)

@@ -23,7 +23,7 @@ import lombok.*;
         @UniqueConstraint(columnNames = "email"
         )})
 // This matches actual table name in the database.
-public class Customer {
+public class CustomerEntity {
     @Id
 //    Marks this field as primary key.
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -75,17 +75,17 @@ public class Customer {
     The orphanRemoval attribute is a convenience feature that automatically removes child entities
     when they are no longer referenced from the parent side of an association.
 */
-    private List<Transaction> transactions = new ArrayList<>();
+    private List<TransactionEntity> transactionEntities = new ArrayList<>();
 
-    public void addTransaction(Transaction transaction) {
-        transactions.add(transaction);
-        transaction.setCustomer(this);
+    public void addTransaction(TransactionEntity transactionEntity) {
+        transactionEntities.add(transactionEntity);
+        transactionEntity.setCustomerEntity(this);
     }
 
     // Add a helper method to disassociate a transaction
-    public void removeTransaction(Transaction transaction) {
-        transactions.remove(transaction);
-        transaction.setCustomer(null);
+    public void removeTransaction(TransactionEntity transactionEntity) {
+        transactionEntities.remove(transactionEntity);
+        transactionEntity.setCustomerEntity(null);
     }
 
 }
