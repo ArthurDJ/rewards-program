@@ -30,7 +30,10 @@ public interface TransactionRepository extends JpaRepository<TransactionEntity, 
     // Find transactions after a specific date
     List<TransactionEntity> findAllByTransactionDateAfter(Date afterDate);
 
-    // Find total over a specific  mount
-    List<TransactionEntity> findByTotalAfter(BigDecimal afterTotal);
+    // Find total great or equal a specific number
+    List<TransactionEntity> findAllByTotalGreaterThanEqual(BigDecimal total);
+
+    // Find total less or equal a specific number
+    List<TransactionEntity> findAllByTotalLessThanEqual(BigDecimal total);
 
 }

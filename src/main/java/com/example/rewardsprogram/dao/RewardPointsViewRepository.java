@@ -31,10 +31,10 @@ public interface RewardPointsViewRepository extends JpaRepository<RewardPointsVi
     // Find rewardPointsView after a specific date
     List<RewardPointsViewEntity> findAllByTransactionDateAfter(Date afterDate);
 
-    // Find total great or equal a specific  mount
+    // Find total great or equal a specific number
     List<RewardPointsViewEntity> findAllByPointsGreaterThanEqual(Integer points);
 
-    // Find total less or equal a specific  mount
+    // Find total less or equal a specific number
     List<RewardPointsViewEntity> findAllByPointsLessThanEqual(Integer points);
 
 

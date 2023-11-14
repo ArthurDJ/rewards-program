@@ -37,11 +37,10 @@ public interface CustomerRepository extends JpaRepository<CustomerEntity, Long> 
     // Find customers by a pattern in their first name (e.g., all customers whose first name starts with 'Jo')
     List<CustomerEntity> findAllByFirstNameStartingWith(String prefix);
 
-
     // Find customers by birthdate
     List<CustomerEntity> findByDateOfBirth(Date dateOfBirth);
 
-    // Find customers bt Phone number
+    // Find customers by Phone number
     List<CustomerEntity> findAllByPhone(String Phone);
 
 }
