@@ -1,4 +1,4 @@
-package entity;
+package com.example.rewardsprogram.entity;
 
 
 import jakarta.persistence.*;
