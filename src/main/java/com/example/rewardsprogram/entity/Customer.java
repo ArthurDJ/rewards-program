@@ -18,7 +18,7 @@ import lombok.*;
 // Tells Hibernate to make a table out of this class.
 @Table(name = "Customers", uniqueConstraints = {@UniqueConstraint(columnNames = "CustomerID")})
 // This matches actual table name in the database.
-class Customer {
+public class Customer {
     @Id
 //    Marks this field as primary key.
     @GeneratedValue(strategy = GenerationType.IDENTITY)
