@@ -4,7 +4,9 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import lombok.*;
 
@@ -42,7 +44,7 @@ public class Customer {
 
     @NotBlank(message = "Email is mandatory")
     @Email(message = "Email should be valid")
-    @Column(name = "Email", nullable = false)
+    @Column(name = "Email", nullable = false, unique = true)
     private String email;
 
 
@@ -59,4 +61,28 @@ public class Customer {
 
     @Column(name = "Phone")
     private String phone;
+
+
+    @OneToMany(mappedBy = "customer", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+/*
+    Cascade Types
+    The cascade attribute determines which operations are cascaded from the parent to the child.
+    CascadeType.ALL means all operations, including persisting, updating, and deleting, are cascaded.
+    Orphan Removal
+    The orphanRemoval attribute is a convenience feature that automatically removes child entities
+    when they are no longer referenced from the parent side of an association.
+*/
+    private List<Transaction> transactions = new ArrayList<>();
+
+    public void addTransaction(Transaction transaction) {
+        transactions.add(transaction);
+        transaction.setCustomer(this);
+    }
+
+    // Add a helper method to disassociate a transaction
+    public void removeTransaction(Transaction transaction) {
+        transactions.remove(transaction);
+        transaction.setCustomer(null);
+    }
+
 }
