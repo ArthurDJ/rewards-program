@@ -1,6 +1,7 @@
 package com.example.rewardsprogram.repository;
 
 import com.example.rewardsprogram.entity.Customer;
+import com.example.rewardsprogram.entity.Transaction;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -12,6 +13,10 @@ import java.util.List;
 //Used to indicate that the class provides
 //the mechanism for storage, retrieval, search, update and delete operation on objects.
 public interface CustomerRepository extends JpaRepository<Customer, Long> {
+
+    // Find customer by customer ID
+    Customer findAllByCustomerId(Long customerID);
+
     // Find customers by first name
     List<Customer> findAllByFirstName(String firstName);
 
@@ -30,6 +35,5 @@ public interface CustomerRepository extends JpaRepository<Customer, Long> {
 
     // Find customers bt Phone number
     List<Customer> findAllByPhone(String Phone);
-
 
 }
