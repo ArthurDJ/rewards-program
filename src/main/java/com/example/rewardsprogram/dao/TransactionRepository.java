@@ -4,6 +4,7 @@ import com.example.rewardsprogram.entity.TransactionEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
@@ -27,5 +28,8 @@ public interface TransactionRepository extends JpaRepository<TransactionEntity, 
 
     // Find transactions after a specific date
     List<TransactionEntity> findAllByTransactionDateAfter(Date afterDate);
+
+    // Find total over a specific  mount
+    List<TransactionEntity> findByTotalAfter(BigDecimal afterTotal);
 
 }
