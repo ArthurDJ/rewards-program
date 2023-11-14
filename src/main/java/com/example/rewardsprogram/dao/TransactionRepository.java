@@ -1,4 +1,4 @@
-package com.example.rewardsprogram.repository;
+package com.example.rewardsprogram.dao;
 
 import com.example.rewardsprogram.entity.Transaction;
 import org.springframework.data.jpa.repository.JpaRepository;
