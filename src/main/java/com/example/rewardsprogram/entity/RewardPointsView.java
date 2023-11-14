@@ -9,7 +9,7 @@ import java.util.Date;
 
 @Getter
 
-@Entity(name = "RewardPoint")
+@Entity(name = "RewardPointsView")
 @Immutable
 // Marks the entity as immutable. Hibernate will not try to write any changes to this entity.
 @Table(name = "RewardPointsView", uniqueConstraints = {
@@ -20,11 +20,11 @@ public class RewardPointsView {
 
     @Id
     @Column(name = "TransactionID")
-    private Long transactionID;
+    private Long transactionId;
 
 
     @Column(name = "CustomerID")
-    private Long customerID;
+    private Long customerId;
 
 
     @Column(name = "TransactionDate")
