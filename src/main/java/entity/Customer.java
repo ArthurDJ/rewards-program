@@ -4,11 +4,9 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 
-import javax.lang.model.element.Name;
 import java.util.Date;
+
 import lombok.*;
-
-
 
 
 @Getter
@@ -18,9 +16,7 @@ import lombok.*;
 
 @Entity(name = "Customer")
 // Tells Hibernate to make a table out of this class.
-@Table(name = "Customers", uniqueConstraints = {
-        @UniqueConstraint(columnNames = "CustomerID")
-})
+@Table(name = "Customers", uniqueConstraints = {@UniqueConstraint(columnNames = "CustomerID")})
 // This matches actual table name in the database.
 class Customer {
     @Id
@@ -46,7 +42,7 @@ class Customer {
 
     @NotBlank(message = "Email is mandatory")
     @Email(message = "Email should be valid")
-    @Column(name = "Email", nullable = false, unique = false)
+    @Column(name = "Email", nullable = false)
     private String email;
 
 
