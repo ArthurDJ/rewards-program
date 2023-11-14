@@ -1,7 +1,6 @@
-package com.example.rewardsprogram.repository;
+package com.example.rewardsprogram.dao;
 
 import com.example.rewardsprogram.entity.Customer;
-import com.example.rewardsprogram.entity.Transaction;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -13,6 +12,14 @@ import java.util.List;
 //Used to indicate that the class provides
 //the mechanism for storage, retrieval, search, update and delete operation on objects.
 public interface CustomerRepository extends JpaRepository<Customer, Long> {
+
+    /*
+    The first parameter, Customer,
+    tells Spring Data JPA that this repository is specifically for entities of type Customer.
+    The second parameter, Long,
+    indicates that the primary key field (@Id) of the RewardPointsView entity is of type Long.
+     */
+
 
     // Find customer by customer ID
     Customer findAllByCustomerId(Long customerID);
