@@ -14,7 +14,7 @@ public interface TransactionRepository extends JpaRepository<Transaction, Long> 
     List<Transaction> findAllByCustomerID(Long customerID);
 
     // Find transactions by  transaction ID
-    Transaction findByTransactionID(Long transactionID);
+    Transaction findAllByTransactionID(Long transactionID);
 
     // Find transactions within a date range
     List<Transaction> findALLByTransactionDateBetween(Date startDate, Date endDate);
