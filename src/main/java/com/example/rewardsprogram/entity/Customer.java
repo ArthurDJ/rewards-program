@@ -18,7 +18,10 @@ import lombok.*;
 
 @Entity(name = "Customer")
 // Tells Hibernate to make a table out of this class.
-@Table(name = "Customers", uniqueConstraints = {@UniqueConstraint(columnNames = "CustomerID")})
+@Table(name = "Customers", uniqueConstraints = {
+        @UniqueConstraint(columnNames = "CustomerID"),
+        @UniqueConstraint(columnNames = "email"
+        )})
 // This matches actual table name in the database.
 public class Customer {
     @Id
