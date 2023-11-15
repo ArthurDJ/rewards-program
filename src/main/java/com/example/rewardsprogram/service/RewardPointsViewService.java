@@ -23,4 +23,6 @@ public interface RewardPointsViewService {
     List<RewardPointsView> findRewardPointsByPointsLessThanEqual(Integer points);
 
     List<RewardPointsView> findRewardPointsBetweenPoints(Integer startPoints, Integer endPoints);
+
+    List<RewardPointsView> findALLRewardPoints();
 }
