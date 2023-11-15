@@ -22,7 +22,7 @@ public class Transaction {
 
     private Long transactionId;
 
-    @NotBlank(message = "Require customer ID.")
+    @NotNull(message = "Require customer ID.")
     private Long customerId;
 
 
