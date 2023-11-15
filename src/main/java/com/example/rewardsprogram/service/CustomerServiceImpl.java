@@ -56,7 +56,7 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public List<Customer> findCustomersByDateOgBirth(Date dateOfBirth) {
+    public List<Customer> findCustomersByDateOfBirth(Date dateOfBirth) {
         List<CustomerEntity> customerEntities = customerRepository.findAllByDateOfBirth(dateOfBirth);
         return customerEntities.stream().map(CustomerEntityVoConverter::convertEntityToVo).collect(Collectors.toList());
     }
