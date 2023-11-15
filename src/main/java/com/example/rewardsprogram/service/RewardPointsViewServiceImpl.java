@@ -86,4 +86,12 @@ public class RewardPointsViewServiceImpl implements RewardPointsViewService {
                 .map(RewardPointsViewEntityVoConverter::convertEntityToVo)
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public List<RewardPointsView> findALLRewardPoints() {
+        List<RewardPointsViewEntity> entities = rewardPointsViewRepository.findAll();
+        return entities.stream()
+                .map(RewardPointsViewEntityVoConverter::convertEntityToVo)
+                .collect(Collectors.toList());
+    }
 }
