@@ -31,11 +31,13 @@ public class Customer {
 
     @PastOrPresent(message = "Create date must be in the past or present")
     @JsonFormat(pattern = "yyyy-MM-dd")
+    @org.springframework.format.annotation.DateTimeFormat(pattern = "yyyy-MM-dd")
 //    Ensures the date is not in the future.
     private Date createDate;
 
-    @Past
+    @Past(message = "The date of birth must be in the past")
     @JsonFormat(pattern = "yyyy-MM-dd")
+    @org.springframework.format.annotation.DateTimeFormat(pattern = "yyyy-MM-dd")
 //    Ensures the date is  in the past.
     private Date dateOfBirth;
 
