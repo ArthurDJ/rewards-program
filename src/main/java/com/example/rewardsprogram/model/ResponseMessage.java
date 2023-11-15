@@ -10,12 +10,13 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class ResponseMassage {
+public class ResponseMessage {
     private String message;
     @JsonProperty("data")
     private Object body;
 
-    public ResponseMassage(String message) {
+    public ResponseMessage(String message) {
         this.message = message;
     }
+
 }
