@@ -17,7 +17,7 @@ import java.util.Date;
 @NoArgsConstructor
 
 @Entity(name = "Transaction")
-@Table(name = "Transactions", uniqueConstraints = {
+@Table(name = "transactions", uniqueConstraints = {
         @UniqueConstraint(columnNames = "TransactionID")
 })
 public class TransactionEntity {

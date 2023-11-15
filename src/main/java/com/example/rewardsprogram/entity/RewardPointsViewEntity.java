@@ -12,7 +12,7 @@ import java.util.Date;
 @Entity(name = "RewardPointsView")
 @Immutable
 // Marks the entity as immutable. Hibernate will not try to write any changes to this entity.
-@Table(name = "RewardPointsView", uniqueConstraints = {
+@Table(name = "rewardPointsView", uniqueConstraints = {
         @UniqueConstraint(columnNames = "TransactionID")
 })
 public class RewardPointsViewEntity {

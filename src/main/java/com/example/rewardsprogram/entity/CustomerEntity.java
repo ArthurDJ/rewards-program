@@ -18,7 +18,7 @@ import lombok.*;
 
 @Entity(name = "Customer")
 // Tells Hibernate to make a table out of this class.
-@Table(name = "Customers", uniqueConstraints = {
+@Table(name = "customers", uniqueConstraints = {
         @UniqueConstraint(columnNames = "CustomerID"),
         @UniqueConstraint(columnNames = "email"
         )})
@@ -71,7 +71,7 @@ public class CustomerEntity {
     private String phone;
 
 
-    @OneToMany(mappedBy = "customer", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "customerEntity", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
 /*
     Cascade Types
     The cascade attribute determines which operations are cascaded from the parent to the child.
