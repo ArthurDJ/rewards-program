@@ -29,6 +29,7 @@ public class Transaction {
     @NotNull(message = "Require transaction Date.")
     @PastOrPresent(message = "Transaction date must be in the past or present.")
     @JsonFormat(pattern = "yyyy-MM-dd")
+    @org.springframework.format.annotation.DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date transactionDate;
 
     @NotNull
