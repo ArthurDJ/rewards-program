@@ -1,5 +1,6 @@
 package com.example.rewardsprogram.controller;
 
+import com.example.rewardsprogram.exception.NumberCantNegativeException;
 import com.example.rewardsprogram.model.ResponseMessage;
 import com.example.rewardsprogram.model.Transaction;
 import com.example.rewardsprogram.service.TransactionService;
@@ -32,6 +33,9 @@ public class TransactionController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Transaction> getTransactionById(@PathVariable("id") Long id) {
+        if (id.compareTo(0L) <= 0){
+            throw new NumberCantNegativeException("Transaction ID should be at least One.");
+        }
         Transaction transaction = transactionService.findTransactionById(id);
         return transaction != null ?
                 ResponseEntity.ok(transaction) :
@@ -40,6 +44,9 @@ public class TransactionController {
 
     @GetMapping("/customers/{customerId}")
     public ResponseEntity<List<Transaction>> getTransactionsByCustomerId(@PathVariable("customerId") Long customerId) {
+        if (customerId.compareTo(0L) <= 0){
+            throw new NumberCantNegativeException("Customer ID should be at least One.");
+        }
         List<Transaction> transactions = transactionService.findTransactionsByCustomerId(customerId);
         return ResponseEntity.ok(transactions);
     }
@@ -64,6 +71,9 @@ public class TransactionController {
     @GetMapping("/total_greater")
     public ResponseEntity<List<Transaction>> findTransactionsWithTotalGreaterThanEqual(
             @RequestParam BigDecimal total) {
+        if (total.compareTo(BigDecimal.ZERO) < 0){
+            throw new NumberCantNegativeException("Total should be at least Zero.");
+        }
         List<Transaction> transactions = transactionService.findTransactionsWithTotalGreaterThanEqual(total);
         return ResponseEntity.ok(transactions);
     }
@@ -71,6 +81,9 @@ public class TransactionController {
     @GetMapping("/total_less")
     public ResponseEntity<List<Transaction>> findTransactionsWithTotalLessThanEqual(
             @RequestParam BigDecimal total) {
+        if (total.compareTo(BigDecimal.ZERO) < 0){
+            throw new NumberCantNegativeException("Total should be at least Zero.");
+        }
         List<Transaction> transactions = transactionService.findTransactionsWithTotalLessThanEqual(total);
         return ResponseEntity.ok(transactions);
     }
@@ -104,5 +117,7 @@ public class TransactionController {
         transactionService.deleteTransactionById(id);
         return ResponseEntity.ok(new ResponseMessage("Transaction has been deleted."));
     }
+
+
 
 }
