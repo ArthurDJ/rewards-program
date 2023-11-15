@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.Date;
 
 @Getter
@@ -19,6 +20,7 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Transaction {
+
 
     private Long transactionId;
 
@@ -30,7 +32,7 @@ public class Transaction {
     @PastOrPresent(message = "Transaction date must be in the past or present.")
     @JsonFormat(pattern = "yyyy-MM-dd")
     @org.springframework.format.annotation.DateTimeFormat(pattern = "yyyy-MM-dd")
-    private Date transactionDate;
+    private LocalDate transactionDate = LocalDate.now();
 
     @NotNull
     @DecimalMin(value = "0.01", message = "Total amount must be greater than 0.")
