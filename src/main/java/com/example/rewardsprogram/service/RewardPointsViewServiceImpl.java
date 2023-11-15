@@ -2,13 +2,14 @@ package com.example.rewardsprogram.service;
 
 import com.example.rewardsprogram.dao.RewardPointsViewRepository;
 import com.example.rewardsprogram.entity.RewardPointsViewEntity;
+import com.example.rewardsprogram.model.CustomerMonthlyRewards;
 import com.example.rewardsprogram.model.RewardPointsView;
 import com.example.rewardsprogram.util.RewardPointsViewEntityVoConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
-import java.util.List;
+import java.text.SimpleDateFormat;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service("rewardPointsService")
@@ -94,4 +95,38 @@ public class RewardPointsViewServiceImpl implements RewardPointsViewService {
                 .map(RewardPointsViewEntityVoConverter::convertEntityToVo)
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public List<CustomerMonthlyRewards> calculateMonthlyRewardsForCustomers(Integer months) {
+        Date endDate = new Date();
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(endDate);
+        calendar.add(Calendar.MONTH, -months+1);
+        Date startDate = calendar.getTime();
+
+        List<RewardPointsViewEntity> rewardPoints = rewardPointsViewRepository
+                .findALLByTransactionDateBetween(startDate, endDate);
+
+        Map<Long, CustomerMonthlyRewards> rewardsMap = new HashMap<>();
+
+        for (RewardPointsViewEntity entity : rewardPoints) {
+            Long customerId = entity.getCustomerId();
+            Date transactionDate = entity.getTransactionDate();
+            Integer points = entity.getPoints();
+
+            // Format the date to "yyyy-MM"
+            SimpleDateFormat formatter = new SimpleDateFormat("MM");
+            String month = formatter.format(transactionDate);
+
+            CustomerMonthlyRewards customerRewards = rewardsMap.getOrDefault(customerId,
+                    new CustomerMonthlyRewards(customerId));
+            customerRewards.getMonthlyPoints().merge(month, points, Integer::sum);
+            customerRewards.setTotalPoints(customerRewards.getTotalPoints() + points);
+
+            rewardsMap.put(customerId, customerRewards);
+        }
+
+        return new ArrayList<>(rewardsMap.values());
+    }
+
 }
