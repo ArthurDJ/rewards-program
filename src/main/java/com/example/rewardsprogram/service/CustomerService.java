@@ -18,7 +18,7 @@ public interface CustomerService {
 
     List<Customer> findCustomersByFirstNameStartingWith(String prefix);
 
-    List<Customer> findCustomersByDateOgBirth(Date dateOfBirth);
+    List<Customer> findCustomersByDateOfBirth(Date dateOfBirth);
 
     List<Customer> findCustomersByPhone(String Phone);
 
@@ -27,7 +27,6 @@ public interface CustomerService {
     void deleteCustomerByCustomerId(Long customerId);
 
     List<Customer> findAllCustomers();
-
 
 
 }

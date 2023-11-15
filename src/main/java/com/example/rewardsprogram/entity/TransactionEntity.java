@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.math.BigDecimal;
+
 import java.util.Date;
 
 
@@ -15,6 +16,7 @@ import java.util.Date;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
+
 
 @Entity(name = "Transaction")
 @Table(name = "transactions", uniqueConstraints = {

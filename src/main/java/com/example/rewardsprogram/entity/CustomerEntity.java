@@ -54,13 +54,12 @@ public class CustomerEntity {
     @Column(name = "CreateDate", nullable = false, updatable = true)
     @Temporal(TemporalType.DATE)
 //    Specifies the type of the date field
-    private Date createDate = new Date();
+    private Date createDate;
 
     @PrePersist
-    protected void onCreate(){
+    protected void onCreate() {
         createDate = new Date();
     }
-
 
     @Column(name = "DateOfBirth")
     @Temporal(TemporalType.DATE)
