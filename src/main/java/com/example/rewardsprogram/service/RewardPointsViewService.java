@@ -27,6 +27,8 @@ public interface RewardPointsViewService {
 
     List<RewardPointsView> findALLRewardPoints();
 
-    List<CustomerMonthlyRewards> calculateMonthlyRewardsForCustomers(Integer months);
+    List<CustomerMonthlyRewards> calculateMonthlyRewardsForAllCustomers(Integer months);
+
+    List<CustomerMonthlyRewards> calculateMonthlyRewardsForCustomer(Long customerId, Integer months);
 
 }

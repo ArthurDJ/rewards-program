@@ -97,7 +97,7 @@ public class RewardPointsViewServiceImpl implements RewardPointsViewService {
     }
 
     @Override
-    public List<CustomerMonthlyRewards> calculateMonthlyRewardsForCustomers(Integer months) {
+    public List<CustomerMonthlyRewards> calculateMonthlyRewardsForAllCustomers(Integer months) {
         Date endDate = new Date();
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(endDate);
@@ -114,7 +114,6 @@ public class RewardPointsViewServiceImpl implements RewardPointsViewService {
             Date transactionDate = entity.getTransactionDate();
             Integer points = entity.getPoints();
 
-            // Format the date to "yyyy-MM"
             SimpleDateFormat formatter = new SimpleDateFormat("MM");
             String month = formatter.format(transactionDate);
 
@@ -128,5 +127,36 @@ public class RewardPointsViewServiceImpl implements RewardPointsViewService {
 
         return new ArrayList<>(rewardsMap.values());
     }
+
+    @Override
+    public List<CustomerMonthlyRewards> calculateMonthlyRewardsForCustomer(Long customerId, Integer months) {
+        Date endDate = new Date();
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(endDate);
+        calendar.add(Calendar.MONTH, -months+1);
+        Date startDate = calendar.getTime();
+
+        // 仅查询特定客户ID的记录
+        List<RewardPointsViewEntity> rewardPoints =
+                rewardPointsViewRepository.findAllByCustomerIdAndTransactionDateBetween(customerId, startDate, endDate);
+
+        // 初始化CustomerMonthlyRewards对象
+        CustomerMonthlyRewards customerRewards = new CustomerMonthlyRewards(customerId);
+
+        // 分组并计算每个月的积分
+        for (RewardPointsViewEntity entity : rewardPoints) {
+            Date transactionDate = entity.getTransactionDate();
+            Integer points = entity.getPoints();
+
+            SimpleDateFormat formatter = new SimpleDateFormat("MM");
+            String month = formatter.format(transactionDate);
+
+            customerRewards.getMonthlyPoints().merge(month, points, Integer::sum);
+            customerRewards.setTotalPoints(customerRewards.getTotalPoints() + points);
+        }
+
+        return Collections.singletonList(customerRewards);
+    }
+
 
 }
