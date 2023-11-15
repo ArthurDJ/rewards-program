@@ -4,7 +4,9 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import lombok.*;
 
@@ -16,9 +18,12 @@ import lombok.*;
 
 @Entity(name = "Customer")
 // Tells Hibernate to make a table out of this class.
-@Table(name = "Customers", uniqueConstraints = {@UniqueConstraint(columnNames = "CustomerID")})
+@Table(name = "customers", uniqueConstraints = {
+        @UniqueConstraint(columnNames = "CustomerID"),
+        @UniqueConstraint(columnNames = "email"
+        )})
 // This matches actual table name in the database.
-class Customer {
+public class CustomerEntity {
     @Id
 //    Marks this field as primary key.
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -42,14 +47,19 @@ class Customer {
 
     @NotBlank(message = "Email is mandatory")
     @Email(message = "Email should be valid")
-    @Column(name = "Email", nullable = false)
+    @Column(name = "Email", nullable = false, unique = true)
     private String email;
 
 
-    @Column(name = "CreateDate", nullable = false, updatable = false)
+    @Column(name = "CreateDate", nullable = false, updatable = true)
     @Temporal(TemporalType.DATE)
 //    Specifies the type of the date field
     private Date createDate = new Date();
+
+    @PrePersist
+    protected void onCreate(){
+        createDate = new Date();
+    }
 
 
     @Column(name = "DateOfBirth")
@@ -59,4 +69,28 @@ class Customer {
 
     @Column(name = "Phone")
     private String phone;
+
+
+    @OneToMany(mappedBy = "customerEntity", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+/*
+    Cascade Types
+    The cascade attribute determines which operations are cascaded from the parent to the child.
+    CascadeType.ALL means all operations, including persisting, updating, and deleting, are cascaded.
+    Orphan Removal
+    The orphanRemoval attribute is a convenience feature that automatically removes child entities
+    when they are no longer referenced from the parent side of an association.
+*/
+    private List<TransactionEntity> transactionEntities = new ArrayList<>();
+
+    public void addTransaction(TransactionEntity transactionEntity) {
+        transactionEntities.add(transactionEntity);
+        transactionEntity.setCustomerEntity(this);
+    }
+
+    // Add a helper method to disassociate a transaction
+    public void removeTransaction(TransactionEntity transactionEntity) {
+        transactionEntities.remove(transactionEntity);
+        transactionEntity.setCustomerEntity(null);
+    }
+
 }
