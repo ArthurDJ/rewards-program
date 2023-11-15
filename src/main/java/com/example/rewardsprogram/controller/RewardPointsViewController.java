@@ -92,8 +92,13 @@ public class RewardPointsViewController {
 
     @GetMapping("/monthlyRewards")
     public ResponseEntity<List<CustomerMonthlyRewards>> getMonthlyRewards(
-            @RequestParam(required = false, defaultValue = "3") int months) {
-        return ResponseEntity.ok(rewardPointsViewService.calculateMonthlyRewardsForCustomers(months));
+            @RequestParam(required = false, defaultValue = "3") int months,
+            @RequestParam(required = false) Long customerId) {
+        if (customerId == null) {
+            return ResponseEntity.ok(rewardPointsViewService.calculateMonthlyRewardsForAllCustomers(months));
+        } else {
+            return ResponseEntity.ok(rewardPointsViewService.calculateMonthlyRewardsForCustomer(customerId, months));
+        }
     }
 
 }
