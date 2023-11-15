@@ -13,7 +13,7 @@ import java.util.Optional;
 @Repository
 public interface TransactionRepository extends JpaRepository<TransactionEntity, Long> {
     // Find transactions by customer ID
-    List<TransactionEntity> findAllByCustomerID(Long customerID);
+    List<TransactionEntity> findAllByCustomerEntity_CustomerId(Long customerID);
 
     // Find transactions by  transaction ID
     Optional<TransactionEntity> findByTransactionId(Long transactionID);
