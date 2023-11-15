@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
+
 import java.util.stream.Collectors;
 
 import static com.example.rewardsprogram.util.TransactionEntityVoConverter.convertEntityToVo;
@@ -113,6 +113,7 @@ public class TransactionServiceImpl implements TransactionService {
             // Update
             transactionEntity = transactionRepository.findById(transaction.getTransactionId())
                     .orElseThrow(() -> new EntityNotFoundException("Transaction not found with ID: " + transaction.getTransactionId()));
+            transactionEntity.setTransactionDate(transaction.getTransactionDate());
         } else {
             // Save
             transactionEntity = new TransactionEntity();
@@ -122,8 +123,6 @@ public class TransactionServiceImpl implements TransactionService {
         CustomerEntity customerEntity = customerRepository.findById(transaction.getCustomerId())
                 .orElseThrow(() -> new EntityNotFoundException("Customer not found with ID: " + transaction.getCustomerId()));
         transactionEntity.setCustomerEntity(customerEntity);
-
-        transactionEntity.setTransactionDate(transaction.getTransactionDate());
         transactionEntity.setTotal(transaction.getTotal());
 
         TransactionEntity savedTransactionEntity = transactionRepository.save(transactionEntity);
