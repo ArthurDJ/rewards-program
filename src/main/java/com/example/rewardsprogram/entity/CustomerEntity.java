@@ -51,10 +51,15 @@ public class CustomerEntity {
     private String email;
 
 
-    @Column(name = "CreateDate", nullable = false, updatable = false)
+    @Column(name = "CreateDate", nullable = false, updatable = true)
     @Temporal(TemporalType.DATE)
 //    Specifies the type of the date field
     private Date createDate = new Date();
+
+    @PrePersist
+    protected void onCreate(){
+        createDate = new Date();
+    }
 
 
     @Column(name = "DateOfBirth")
