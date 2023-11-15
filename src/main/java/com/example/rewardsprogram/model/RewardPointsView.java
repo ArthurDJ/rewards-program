@@ -20,7 +20,6 @@ import java.util.Date;
 @AllArgsConstructor
 public class RewardPointsView {
 
-
     private Long transactionId;
 
     @NotNull(message = "Require customer ID")
