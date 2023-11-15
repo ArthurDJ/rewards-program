@@ -23,7 +23,7 @@ public interface CustomerRepository extends JpaRepository<CustomerEntity, Long> 
 
 
     // Find customer by customer ID
-    Optional<CustomerEntity> findAllByCustomerId(Long customerID);
+    Optional<CustomerEntity> findByCustomerId(Long customerID);
 
     // Find customers by first name
     List<CustomerEntity> findAllByFirstName(String firstName);
@@ -38,7 +38,7 @@ public interface CustomerRepository extends JpaRepository<CustomerEntity, Long> 
     List<CustomerEntity> findAllByFirstNameStartingWith(String prefix);
 
     // Find customers by birthdate
-    List<CustomerEntity> findByDateOfBirth(Date dateOfBirth);
+    List<CustomerEntity> findAllByDateOfBirth(Date dateOfBirth);
 
     // Find customers by Phone number
     List<CustomerEntity> findAllByPhone(String Phone);
