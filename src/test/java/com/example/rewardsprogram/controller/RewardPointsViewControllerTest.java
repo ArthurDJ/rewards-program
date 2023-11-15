@@ -53,8 +53,6 @@ public class RewardPointsViewControllerTest {
                 .andExpect(jsonPath("$", hasSize(mockResponse.size())));
     }
 
-    // Add similar tests for other endpoints...
-    // Example for getMonthlyRewards endpoint
     @Test
     public void getMonthlyRewardsTest() throws Exception {
         int months = 3;
