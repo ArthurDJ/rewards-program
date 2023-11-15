@@ -1,10 +1,13 @@
 package com.example.rewardsprogram.controller;
 
+import com.example.rewardsprogram.exception.NotFoundException;
 import com.example.rewardsprogram.exception.NumberCantNegativeException;
+import com.example.rewardsprogram.model.ErrorResponse;
 import com.example.rewardsprogram.model.ResponseMessage;
 import com.example.rewardsprogram.model.Transaction;
 import com.example.rewardsprogram.service.TransactionService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -33,27 +36,37 @@ public class TransactionController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Transaction> getTransactionById(@PathVariable("id") Long id) {
-        if (id.compareTo(0L) <= 0){
+        if (id.compareTo(0L) <= 0) {
             throw new NumberCantNegativeException("Transaction ID should be at least One.");
         }
         Transaction transaction = transactionService.findTransactionById(id);
-        return transaction != null ?
-                ResponseEntity.ok(transaction) :
-                ResponseEntity.notFound().build();
+        if (transaction == null) {
+            throw new NotFoundException("Transaction not found for ID: " + id);
+        }
+        return ResponseEntity.ok(transaction);
     }
 
     @GetMapping("/customers/{customerId}")
     public ResponseEntity<List<Transaction>> getTransactionsByCustomerId(@PathVariable("customerId") Long customerId) {
-        if (customerId.compareTo(0L) <= 0){
+        if (customerId.compareTo(0L) <= 0) {
             throw new NumberCantNegativeException("Customer ID should be at least One.");
         }
         List<Transaction> transactions = transactionService.findTransactionsByCustomerId(customerId);
+        if (transactions == null || transactions.isEmpty()) {
+            throw new NotFoundException("No transactions found for Customer ID: " + customerId);
+        }
         return ResponseEntity.ok(transactions);
     }
 
     @GetMapping("/date")
     public ResponseEntity<List<Transaction>> getTransactionsByDate(@RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date date) {
+        if (date == null) {
+            throw new IllegalArgumentException("Date parameter is required.");
+        }
         List<Transaction> transactions = transactionService.findTransactionsByDate(date);
+        if (transactions == null || transactions.isEmpty()) {
+            throw new NotFoundException("No transactions found on Date: " + date);
+        }
         return ResponseEntity.ok(transactions);
     }
 
@@ -65,13 +78,16 @@ public class TransactionController {
             @DateTimeFormat(pattern = "yyyy-MM-dd") Date endDate) {
 
         List<Transaction> transactions = transactionService.findTransactionsBetweenDates(startDate, endDate);
+        if (transactions == null || transactions.isEmpty()) {
+            throw new NotFoundException("No transactions found between dates.");
+        }
         return ResponseEntity.ok(transactions);
-
     }
+
     @GetMapping("/total_greater")
     public ResponseEntity<List<Transaction>> findTransactionsWithTotalGreaterThanEqual(
             @RequestParam BigDecimal total) {
-        if (total.compareTo(BigDecimal.ZERO) < 0){
+        if (total.compareTo(BigDecimal.ZERO) < 0) {
             throw new NumberCantNegativeException("Total should be at least Zero.");
         }
         List<Transaction> transactions = transactionService.findTransactionsWithTotalGreaterThanEqual(total);
@@ -81,7 +97,7 @@ public class TransactionController {
     @GetMapping("/total_less")
     public ResponseEntity<List<Transaction>> findTransactionsWithTotalLessThanEqual(
             @RequestParam BigDecimal total) {
-        if (total.compareTo(BigDecimal.ZERO) < 0){
+        if (total.compareTo(BigDecimal.ZERO) < 0) {
             throw new NumberCantNegativeException("Total should be at least Zero.");
         }
         List<Transaction> transactions = transactionService.findTransactionsWithTotalLessThanEqual(total);
@@ -118,6 +134,21 @@ public class TransactionController {
         return ResponseEntity.ok(new ResponseMessage("Transaction has been deleted."));
     }
 
+    @ExceptionHandler(NumberCantNegativeException.class)
+    public ResponseEntity<ErrorResponse> handleException(NumberCantNegativeException ex) {
+        ErrorResponse error = new ErrorResponse();
+        error.setErrorCode(HttpStatus.BAD_REQUEST.value());
+        error.setMessage(ex.getErrorMessage());
+        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+    }
 
+
+    @ExceptionHandler(NotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleNotFoundException(NotFoundException ex) {
+        ErrorResponse error = new ErrorResponse();
+        error.setErrorCode(HttpStatus.NOT_FOUND.value());
+        error.setMessage(ex.getErrorMessage());
+        return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
+    }
 
 }
