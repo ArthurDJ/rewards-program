@@ -74,9 +74,10 @@ public class CustomerController {
         List<Customer> customers = customerService.findCustomersByPhone(phone);
         return ResponseEntity.ok(customers);
     }
+
     @GetMapping("/search/email")
     public ResponseEntity<Customer> getCustomerByEmail(@RequestParam String email) {
-        Customer customer =  customerService.findCustomerByEmail(email);
+        Customer customer = customerService.findCustomerByEmail(email);
         if (customer != null) {
             return new ResponseEntity<>(customer, HttpStatus.OK);
         } else {

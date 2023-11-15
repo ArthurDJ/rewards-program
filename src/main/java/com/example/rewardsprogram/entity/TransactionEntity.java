@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.math.BigDecimal;
+
 import java.util.Date;
 
 
@@ -15,6 +16,7 @@ import java.util.Date;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
+
 
 @Entity(name = "Transaction")
 @Table(name = "transactions", uniqueConstraints = {
@@ -25,6 +27,7 @@ public class TransactionEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "TransactionID")
     private Long transactionId;
+
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
 //   it should not be fetched from the database until it's explicitly accessed in the code.
