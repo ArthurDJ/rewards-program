@@ -50,7 +50,7 @@ public class TransactionController {
         return ResponseEntity.ok(transactions);
     }
 
-    @GetMapping("/search/date")
+    @GetMapping("/dateBetween")
     public ResponseEntity<List<Transaction>> getTransactionsBetweenDates(
             @RequestParam(required = false, defaultValue = "0001-01-01")
             @DateTimeFormat(pattern = "yyyy-MM-dd") Date startDate,
@@ -61,14 +61,14 @@ public class TransactionController {
         return ResponseEntity.ok(transactions);
 
     }
-    @GetMapping("/search/total_greater")
+    @GetMapping("/total_greater")
     public ResponseEntity<List<Transaction>> findTransactionsWithTotalGreaterThanEqual(
             @RequestParam BigDecimal total) {
         List<Transaction> transactions = transactionService.findTransactionsWithTotalGreaterThanEqual(total);
         return ResponseEntity.ok(transactions);
     }
 
-    @GetMapping("/search/total_less")
+    @GetMapping("/total_less")
     public ResponseEntity<List<Transaction>> findTransactionsWithTotalLessThanEqual(
             @RequestParam BigDecimal total) {
         List<Transaction> transactions = transactionService.findTransactionsWithTotalLessThanEqual(total);
