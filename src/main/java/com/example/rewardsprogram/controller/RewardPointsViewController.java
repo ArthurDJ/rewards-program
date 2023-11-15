@@ -86,7 +86,7 @@ public class RewardPointsViewController {
     @GetMapping("/points")
     public ResponseEntity<List<RewardPointsView>> getRewardPointsBetweenPoints(
             @RequestParam(required = false, defaultValue = "0") Integer startPoints,
-            @RequestParam(required = false, defaultValue = "1000000000") Integer endPoints) {
+            @RequestParam(required = false, defaultValue = Integer.MAX_VALUE + "") Integer endPoints) {
         return ResponseEntity.ok(rewardPointsViewService.findRewardPointsBetweenPoints(startPoints, endPoints));
     }
 
