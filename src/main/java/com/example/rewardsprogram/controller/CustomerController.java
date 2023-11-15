@@ -64,7 +64,7 @@ public class CustomerController {
 
     @GetMapping("/search/dob")
     public ResponseEntity<List<Customer>> getCustomersByDateOfBirth(
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date dateOfBirth) {
+            @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date dateOfBirth) {
         List<Customer> customers = customerService.findCustomersByDateOfBirth(dateOfBirth);
         return ResponseEntity.ok(customers);
     }
@@ -73,6 +73,15 @@ public class CustomerController {
     public ResponseEntity<List<Customer>> getCustomersByPhone(@RequestParam String phone) {
         List<Customer> customers = customerService.findCustomersByPhone(phone);
         return ResponseEntity.ok(customers);
+    }
+    @GetMapping("/search/email")
+    public ResponseEntity<Customer> getCustomerByEmail(@RequestParam String email) {
+        Customer customer =  customerService.findCustomerByEmail(email);
+        if (customer != null) {
+            return new ResponseEntity<>(customer, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 
 
