@@ -61,7 +61,6 @@ public class CustomerEntity {
         createDate = new Date();
     }
 
-
     @Column(name = "DateOfBirth")
     @Temporal(TemporalType.DATE)
     private Date dateOfBirth;

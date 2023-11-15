@@ -27,6 +27,7 @@ public class TransactionEntity {
     private Long transactionId;
 
 
+
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
 //   it should not be fetched from the database until it's explicitly accessed in the code.
     @JoinColumn(name = "CustomerID", nullable = false)
