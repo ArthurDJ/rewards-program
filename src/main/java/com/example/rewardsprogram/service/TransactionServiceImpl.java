@@ -7,6 +7,7 @@ import com.example.rewardsprogram.entity.CustomerEntity;
 import com.example.rewardsprogram.entity.TransactionEntity;
 import com.example.rewardsprogram.model.Transaction;
 import com.example.rewardsprogram.util.TransactionEntityVoConverter;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -25,6 +26,10 @@ public class TransactionServiceImpl implements TransactionService {
 
     @Autowired
     private TransactionRepository transactionRepository;
+
+    @Autowired
+    private CustomerRepository customerRepository;
+
 
     @Override
     public List<Transaction> findAllTransactions() {
@@ -96,10 +101,34 @@ public class TransactionServiceImpl implements TransactionService {
                 .collect(Collectors.toList());
     }
 
-    @Override
+//    @Override
+//    public Transaction saveOrUpdateTransaction(Transaction transaction) {
+//        TransactionEntity transactionEntity = transactionRepository.saveAndFlush(convertVoToEntity(transaction));
+//        return convertEntityToVo(transactionEntity);
+//    }
+
     public Transaction saveOrUpdateTransaction(Transaction transaction) {
-        TransactionEntity transactionEntity = transactionRepository.saveAndFlush(convertVoToEntity(transaction));
-        return convertEntityToVo(transactionEntity);
+        TransactionEntity transactionEntity;
+        if (transaction.getTransactionId() != null) {
+            // Update
+            transactionEntity = transactionRepository.findById(transaction.getTransactionId())
+                    .orElseThrow(() -> new EntityNotFoundException("Transaction not found with ID: " + transaction.getTransactionId()));
+        } else {
+            // Save
+            transactionEntity = new TransactionEntity();
+        }
+
+        // Find CustomerEntity by CustomerId and set new customerEntity
+        CustomerEntity customerEntity = customerRepository.findById(transaction.getCustomerId())
+                .orElseThrow(() -> new EntityNotFoundException("Customer not found with ID: " + transaction.getCustomerId()));
+        transactionEntity.setCustomerEntity(customerEntity);
+
+        transactionEntity.setTransactionDate(transaction.getTransactionDate());
+        transactionEntity.setTotal(transaction.getTotal());
+
+        TransactionEntity savedTransactionEntity = transactionRepository.save(transactionEntity);
+
+        return TransactionEntityVoConverter.convertEntityToVo(savedTransactionEntity);
     }
 
 
