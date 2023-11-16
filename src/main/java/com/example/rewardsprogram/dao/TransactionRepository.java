@@ -36,4 +36,5 @@ public interface TransactionRepository extends JpaRepository<TransactionEntity, 
     // Find total less or equal a specific number
     List<TransactionEntity> findAllByTotalLessThanEqual(BigDecimal total);
 
+
 }
