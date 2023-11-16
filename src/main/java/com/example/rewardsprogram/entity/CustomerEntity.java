@@ -70,7 +70,8 @@ public class CustomerEntity {
     private String phone;
 
 
-    @OneToMany(mappedBy = "customerEntity", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+//    @OneToMany(mappedBy = "customerEntity", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "customerEntity", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
 /*
     Cascade Types
     The cascade attribute determines which operations are cascaded from the parent to the child.

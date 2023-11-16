@@ -2,13 +2,14 @@ package com.example.rewardsprogram.service;
 
 import com.example.rewardsprogram.dao.RewardPointsViewRepository;
 import com.example.rewardsprogram.entity.RewardPointsViewEntity;
+import com.example.rewardsprogram.model.CustomerMonthlyRewards;
 import com.example.rewardsprogram.model.RewardPointsView;
 import com.example.rewardsprogram.util.RewardPointsViewEntityVoConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
-import java.util.List;
+import java.text.SimpleDateFormat;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service("rewardPointsService")
@@ -94,4 +95,68 @@ public class RewardPointsViewServiceImpl implements RewardPointsViewService {
                 .map(RewardPointsViewEntityVoConverter::convertEntityToVo)
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public List<CustomerMonthlyRewards> calculateMonthlyRewardsForAllCustomers(Integer months) {
+        Date endDate = new Date();
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(endDate);
+        calendar.add(Calendar.MONTH, -months+1);
+        Date startDate = calendar.getTime();
+
+        List<RewardPointsViewEntity> rewardPoints = rewardPointsViewRepository
+                .findALLByTransactionDateBetween(startDate, endDate);
+
+        Map<Long, CustomerMonthlyRewards> rewardsMap = new HashMap<>();
+
+        for (RewardPointsViewEntity entity : rewardPoints) {
+            Long customerId = entity.getCustomerId();
+            Date transactionDate = entity.getTransactionDate();
+            Integer points = entity.getPoints();
+
+            SimpleDateFormat formatter = new SimpleDateFormat("MM");
+            String month = formatter.format(transactionDate);
+
+            CustomerMonthlyRewards customerRewards = rewardsMap.getOrDefault(customerId,
+                    new CustomerMonthlyRewards(customerId));
+            customerRewards.getMonthlyPoints().merge(month, points, Integer::sum);
+            customerRewards.setTotalPoints(customerRewards.getTotalPoints() + points);
+
+            rewardsMap.put(customerId, customerRewards);
+        }
+
+        return new ArrayList<>(rewardsMap.values());
+    }
+
+    @Override
+    public List<CustomerMonthlyRewards> calculateMonthlyRewardsForCustomer(Long customerId, Integer months) {
+        Date endDate = new Date();
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(endDate);
+        calendar.add(Calendar.MONTH, -months+1);
+        Date startDate = calendar.getTime();
+
+        // 仅查询特定客户ID的记录
+        List<RewardPointsViewEntity> rewardPoints =
+                rewardPointsViewRepository.findAllByCustomerIdAndTransactionDateBetween(customerId, startDate, endDate);
+
+        // 初始化CustomerMonthlyRewards对象
+        CustomerMonthlyRewards customerRewards = new CustomerMonthlyRewards(customerId);
+
+        // 分组并计算每个月的积分
+        for (RewardPointsViewEntity entity : rewardPoints) {
+            Date transactionDate = entity.getTransactionDate();
+            Integer points = entity.getPoints();
+
+            SimpleDateFormat formatter = new SimpleDateFormat("MM");
+            String month = formatter.format(transactionDate);
+
+            customerRewards.getMonthlyPoints().merge(month, points, Integer::sum);
+            customerRewards.setTotalPoints(customerRewards.getTotalPoints() + points);
+        }
+
+        return Collections.singletonList(customerRewards);
+    }
+
+
 }

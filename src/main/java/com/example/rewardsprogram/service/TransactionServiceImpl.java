@@ -47,6 +47,7 @@ public class TransactionServiceImpl implements TransactionService {
 
     @Override
     public List<Transaction> findTransactionsByCustomerId(Long customerId) {
+
         return transactionRepository.findAllByCustomerEntity_CustomerId(customerId)
                 .stream()
                 .map(TransactionEntityVoConverter::convertEntityToVo)

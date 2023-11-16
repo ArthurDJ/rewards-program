@@ -1,5 +1,6 @@
 package com.example.rewardsprogram.service;
 
+import com.example.rewardsprogram.model.CustomerMonthlyRewards;
 import com.example.rewardsprogram.model.RewardPointsView;
 
 import java.util.Date;
@@ -25,4 +26,9 @@ public interface RewardPointsViewService {
     List<RewardPointsView> findRewardPointsBetweenPoints(Integer startPoints, Integer endPoints);
 
     List<RewardPointsView> findALLRewardPoints();
+
+    List<CustomerMonthlyRewards> calculateMonthlyRewardsForAllCustomers(Integer months);
+
+    List<CustomerMonthlyRewards> calculateMonthlyRewardsForCustomer(Long customerId, Integer months);
+
 }

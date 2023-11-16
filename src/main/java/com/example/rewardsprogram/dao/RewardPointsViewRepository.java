@@ -20,6 +20,8 @@ public interface RewardPointsViewRepository extends JpaRepository<RewardPointsVi
     // Find rewardPointsView within a date range
     List<RewardPointsViewEntity> findALLByTransactionDateBetween(Date startDate, Date endDate);
 
+    List<RewardPointsViewEntity> findAllByCustomerIdAndTransactionDateBetween(Long customerId, Date startDate, Date endDate);
+
     // Find rewardPointsView on a specific date
     List<RewardPointsViewEntity> findAllByTransactionDate(Date transactionDate);
 

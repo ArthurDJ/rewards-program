@@ -2,6 +2,7 @@ package com.example.rewardsprogram.controller;
 
 
 import com.example.rewardsprogram.dao.RewardPointsViewRepository;
+import com.example.rewardsprogram.model.CustomerMonthlyRewards;
 import com.example.rewardsprogram.model.RewardPointsView;
 import com.example.rewardsprogram.model.Transaction;
 import com.example.rewardsprogram.service.RewardPointsViewService;
@@ -82,11 +83,22 @@ public class RewardPointsViewController {
     }
 
     // 获取特定积分范围内的奖励点
-    @GetMapping("/pointsRange")
-    public ResponseEntity<List<RewardPointsView>> getRewardPointsBetweenPoints(@RequestParam Integer startPoints, @RequestParam Integer endPoints) {
+    @GetMapping("/points")
+    public ResponseEntity<List<RewardPointsView>> getRewardPointsBetweenPoints(
+            @RequestParam(required = false, defaultValue = "0") Integer startPoints,
+            @RequestParam(required = false, defaultValue = Integer.MAX_VALUE + "") Integer endPoints) {
         return ResponseEntity.ok(rewardPointsViewService.findRewardPointsBetweenPoints(startPoints, endPoints));
     }
 
-
+    @GetMapping("/monthlyRewards")
+    public ResponseEntity<List<CustomerMonthlyRewards>> getMonthlyRewards(
+            @RequestParam(required = false, defaultValue = "3") int months,
+            @RequestParam(required = false) Long customerId) {
+        if (customerId == null) {
+            return ResponseEntity.ok(rewardPointsViewService.calculateMonthlyRewardsForAllCustomers(months));
+        } else {
+            return ResponseEntity.ok(rewardPointsViewService.calculateMonthlyRewardsForCustomer(customerId, months));
+        }
+    }
 
 }

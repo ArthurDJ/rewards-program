@@ -1,9 +1,15 @@
 package com.example.rewardsprogram.controller;
 
+import com.example.rewardsprogram.exception.NotFoundException;
+import com.example.rewardsprogram.exception.NumberCantNegativeException;
+import com.example.rewardsprogram.model.ErrorResponse;
 import com.example.rewardsprogram.model.ResponseMessage;
 import com.example.rewardsprogram.model.Transaction;
 import com.example.rewardsprogram.service.TransactionService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +25,9 @@ import java.util.List;
 public class TransactionController {
     private final TransactionService transactionService;
 
+
+    private static final Logger logger = LoggerFactory.getLogger(TransactionController.class);
+
     @Autowired
     public TransactionController(TransactionService transactionService) {
         this.transactionService = transactionService;
@@ -26,27 +35,53 @@ public class TransactionController {
 
     @GetMapping
     public ResponseEntity<List<Transaction>> getAllTransactions() {
+        logger.info("Fetching all transactions");
         List<Transaction> transactions = transactionService.findAllTransactions();
         return ResponseEntity.ok(transactions);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Transaction> getTransactionById(@PathVariable("id") Long id) {
+        logger.info("Fetching transaction with ID: {}", id);
+
+        if (id.compareTo(0L) <= 0) {
+            logger.warn("Attempted to fetch transaction with invalid ID: {}", id);
+            throw new NumberCantNegativeException("Transaction ID should be at least One.");
+        }
         Transaction transaction = transactionService.findTransactionById(id);
-        return transaction != null ?
-                ResponseEntity.ok(transaction) :
-                ResponseEntity.notFound().build();
+        if (transaction == null) {
+            logger.error("Transaction not found for ID: {}", id);
+            throw new NotFoundException("Transaction not found for ID: " + id);
+        }
+        return ResponseEntity.ok(transaction);
     }
 
     @GetMapping("/customers/{customerId}")
     public ResponseEntity<List<Transaction>> getTransactionsByCustomerId(@PathVariable("customerId") Long customerId) {
+        logger.info("Fetching transactions for customer ID: {}", customerId);
+        if (customerId.compareTo(0L) <= 0) {
+            logger.warn("Invalid customer ID: {}", customerId);
+            throw new NumberCantNegativeException("Customer ID should be at least One.");
+        }
         List<Transaction> transactions = transactionService.findTransactionsByCustomerId(customerId);
+        if (transactions == null || transactions.isEmpty()) {
+            logger.error("No transactions found for Customer ID: {}", customerId);
+            throw new NotFoundException("No transactions found for Customer ID: " + customerId);
+        }
         return ResponseEntity.ok(transactions);
     }
 
     @GetMapping("/date")
     public ResponseEntity<List<Transaction>> getTransactionsByDate(@RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date date) {
+        logger.info("Fetching transactions for date: {}", date);
+        if (date == null) {
+            throw new IllegalArgumentException("Date parameter is required.");
+        }
         List<Transaction> transactions = transactionService.findTransactionsByDate(date);
+        if (transactions == null || transactions.isEmpty()) {
+            logger.error("No transactions found for date: {}", date);
+            throw new NotFoundException("No transactions found on Date: " + date);
+        }
         return ResponseEntity.ok(transactions);
     }
 
@@ -58,12 +93,18 @@ public class TransactionController {
             @DateTimeFormat(pattern = "yyyy-MM-dd") Date endDate) {
 
         List<Transaction> transactions = transactionService.findTransactionsBetweenDates(startDate, endDate);
+        if (transactions == null || transactions.isEmpty()) {
+            throw new NotFoundException("No transactions found between dates.");
+        }
         return ResponseEntity.ok(transactions);
-
     }
+
     @GetMapping("/total_greater")
     public ResponseEntity<List<Transaction>> findTransactionsWithTotalGreaterThanEqual(
             @RequestParam BigDecimal total) {
+        if (total.compareTo(BigDecimal.ZERO) < 0) {
+            throw new NumberCantNegativeException("Total should be at least Zero.");
+        }
         List<Transaction> transactions = transactionService.findTransactionsWithTotalGreaterThanEqual(total);
         return ResponseEntity.ok(transactions);
     }
@@ -71,6 +112,9 @@ public class TransactionController {
     @GetMapping("/total_less")
     public ResponseEntity<List<Transaction>> findTransactionsWithTotalLessThanEqual(
             @RequestParam BigDecimal total) {
+        if (total.compareTo(BigDecimal.ZERO) < 0) {
+            throw new NumberCantNegativeException("Total should be at least Zero.");
+        }
         List<Transaction> transactions = transactionService.findTransactionsWithTotalLessThanEqual(total);
         return ResponseEntity.ok(transactions);
     }
@@ -103,6 +147,25 @@ public class TransactionController {
         }
         transactionService.deleteTransactionById(id);
         return ResponseEntity.ok(new ResponseMessage("Transaction has been deleted."));
+    }
+
+    @ExceptionHandler(NumberCantNegativeException.class)
+    public ResponseEntity<ErrorResponse> handleException(NumberCantNegativeException ex) {
+        logger.error("NumberCantNegativeException: {}", ex.getErrorMessage());
+        ErrorResponse error = new ErrorResponse();
+        error.setErrorCode(HttpStatus.BAD_REQUEST.value());
+        error.setMessage(ex.getErrorMessage());
+        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+    }
+
+
+    @ExceptionHandler(NotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleNotFoundException(NotFoundException ex) {
+        logger.error("NotFoundException: {}", ex.getErrorMessage());
+        ErrorResponse error = new ErrorResponse();
+        error.setErrorCode(HttpStatus.NOT_FOUND.value());
+        error.setMessage(ex.getErrorMessage());
+        return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
     }
 
 }
